@@ -21,5 +21,25 @@
 <a href="{{ path('home.index') }}">Retour</a>
 
 </div>
+
+{% if post.comments|length == 0 %}
+   <p>Soyez le premier à commenter cet article!</p>
+{%  else %}
+   <ul>
+       {% for comment in post.comments %}
+           <div class="card mb-3">
+               <div class="card-body">
+                   <h4 class="card-title">Ajouté par {{ comment.user }} 
+                       le {{ comment.createdAt|date("d/m/Y", 'Europe/Paris') }}  
+                        à {{ comment.createdAt|date("H:m", 'Europe/Paris') }}
+                   </h4>
+                   <p class="card-text">{{ comment.content }}</p>
+               </div>
+           </div>
+       {% endfor %}
+   </ul>
+{% endif %}
+
+
 {% endblock %}
 
