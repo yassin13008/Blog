@@ -25,6 +25,16 @@
 {% if post.comments|length == 0 %}
    <p>Soyez le premier à commenter cet article!</p>
 {%  else %}
+
+<div class="error-message">{{ form_errors(form.user) }}</div>
+{{ form_widget(form.content, {'attr': {'class':'my-class'}}) }}
+
+
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <input type="submit" value="Envoyer" class="btn btn-primary">
+    {{ form_end(form) }}
+   
    <ul>
        {% for comment in post.comments %}
            <div class="card mb-3">
