@@ -3,10 +3,12 @@
 namespace App\Factory;
 
 use App\Entity\Post;
+use Zenstruck\Foundry\Proxy;
+use DateTimeImmutable;
 use App\Repository\PostRepository;
 use Zenstruck\Foundry\ModelFactory;
-use Zenstruck\Foundry\Proxy;
 use Zenstruck\Foundry\RepositoryProxy;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 /**
  * @extends ModelFactory<Post>
@@ -34,10 +36,14 @@ final class PostFactory extends ModelFactory
      *
      * @todo inject services if required
      */
-    public function __construct()
-    {
+    public function __construct(
+        private SluggerInterface $slugger
+     )
+     {
         parent::__construct();
-    }
+     }
+     
+    
 
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#model-factories
@@ -54,7 +60,7 @@ final class PostFactory extends ModelFactory
             'author' => self::faker()->text(255),
             'content' => self::faker()->text(),
             'image' => 'https://picsum.photos/seed/post-' . rand(0,500) . '/750/300',
-            'createdAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
+            'createdAt' => DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
             'title' => self::faker()->text(255),
         ];
     }
@@ -64,9 +70,17 @@ final class PostFactory extends ModelFactory
      */
     protected function initialize(): self
     {
-        return $this
-            // ->afterInstantiate(function(Post $post): void {})
-        ;
+         return $this
+                ->afterInstantiate(function(Post $post) {
+                    // On récupère le titre de l'article
+                    $title = $post->getTitle();
+    
+                    // On sluggifie ce titre avec le slugger
+                    $slug = $this->slugger->slug($title);
+    
+                    // On enregistre ce slug dans le champ slug
+                    $post->setSlug($slug);
+                });
     }
 
     protected static function getClass(): string
