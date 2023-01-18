@@ -34,7 +34,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
      )
      
 {
-   $this->flashbag = $this->request->getSession()->getFlashBag();
+   $this->flashBag = $this->request->getSession()->getflashBag();
 }
 
 
@@ -63,7 +63,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
 
-        $this->flashbag->add('success', 'Connexion réussie');
+        $this->flashBag->add('success', 'Connexion réussie');
 
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
             return new RedirectResponse($targetPath);

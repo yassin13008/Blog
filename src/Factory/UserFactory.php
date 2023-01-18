@@ -47,15 +47,21 @@ final class UserFactory extends ModelFactory
      *
      * @todo add your default values here
      */
+
     protected function getDefaults(): array
     {
-        return [
-            'firstname' => self::faker()->firstName,
-            'lastname' => self::faker()->lastName,
-            'email' => self::faker()->email,
-            'hash' => 'password'
-        ];
-    }
+   $datetime = self::faker()->dateTimeBetween('-3 years', 'now', 'Europe/Paris');
+   $datetimeImmutable = \DateTimeImmutable::createFromMutable($datetime);
+
+   return [
+       'firstname' => self::faker()->firstName,
+       'lastname' => self::faker()->lastName,
+       'email' => self::faker()->email,
+       'hash' => 'password',
+       'createdAt' => $datetimeImmutable,
+   ];
+}
+
 
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#initialization
