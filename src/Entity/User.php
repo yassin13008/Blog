@@ -64,6 +64,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
        $this->createdAt = new \DateTimeImmutable('now', new DateTimeZone('Europe/Paris'));
        $this->comments = new ArrayCollection();
     }
+
+    public function hasRole(string $role): bool
+    {
+   return in_array($role, $this->getRoles());
+    }
+
     
 
     public function getId(): ?int

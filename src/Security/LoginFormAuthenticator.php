@@ -59,21 +59,35 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
    );
 }
 
+public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
+{
+   $this->flashBag->add('success', 'Connexion réussie');
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
-    {
+   if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
+       return new RedirectResponse($targetPath);
+   }
 
-        $this->flashBag->add('success', 'Connexion réussie');
+   $route = $token->getUser()->hasRole('ROLE_ADMIN') ? 'admin.index' : 'home.index';
 
-        if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
-            return new RedirectResponse($targetPath);
-        }
-        return new RedirectResponse($this->urlGenerator->generate('home.index'));
+   return new RedirectResponse($this->urlGenerator->generate($route));
+}
 
-        // For example:
-        // return new RedirectResponse($this->urlGenerator->generate('some_route'));
-        throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
-    }
+
+
+    // public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response avt modif chap 10
+    // {
+
+    //     $this->flashBag->add('success', 'Connexion réussie');
+
+    //     if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
+    //         return new RedirectResponse($targetPath);
+    //     }
+    //     return new RedirectResponse($this->urlGenerator->generate('home.index'));
+
+    //     // For example:
+    //     // return new RedirectResponse($this->urlGenerator->generate('some_route'));
+    //     throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
+    // }
 
     public function supports(Request $request): bool
 {
