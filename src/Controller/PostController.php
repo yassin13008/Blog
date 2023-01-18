@@ -24,7 +24,9 @@ public function index(Post $post,Request $request, EntityManagerInterface $manag
 
         $comment = $form->getData();
         $comment->setPost($post);
-
+        
+        $comment->setUser($this->getUser());
+        
         $manager->persist($comment);
         $manager->flush();
 
