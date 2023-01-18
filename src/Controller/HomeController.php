@@ -15,6 +15,8 @@ class HomeController extends AbstractController
 
     $posts = $postRepository->findAll();
 
+    
+
    // dd($posts);
    
 return $this->render('home/index.html.twig', [

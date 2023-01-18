@@ -27,17 +27,13 @@
 {%  else %}
 
 <div class="error-message">{{ form_errors(form.user) }}</div>
-{{ form_widget(form.content, {'attr': {'class':'my-class'}}) }}
 
 
-    {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <input type="submit" value="Envoyer" class="btn btn-primary">
-    {{ form_end(form) }}
+
    
    <ul>
        {% for comment in post.comments %}
-           <div class="card mb-3">
+           <div class="card mb-3 container d-flex flex-column justify-content-center align-items-center">
                <div class="card-body">
                    <h4 class="card-title">Ajouté par {{ comment.user }} 
                        le {{ comment.createdAt|date("d/m/Y", 'Europe/Paris') }}  
@@ -48,6 +44,14 @@
            </div>
        {% endfor %}
    </ul>
+   <div class="container">
+    {{ form_start(form) }}
+    {{ form_widget(form.content, {'attr': {'class':'my-class'}}) }}
+    {{ form_widget(form) }}
+    <input type="submit" value="Envoyer" class="btn btn-primary">
+    {{ form_end(form) }}
+    </div>
+
 {% endif %}
 
 

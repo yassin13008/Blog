@@ -27,8 +27,14 @@ public function index(Post $post,Request $request, EntityManagerInterface $manag
 
         $manager->persist($comment);
         $manager->flush();
+
+        $this->addFlash('success', 'Votre commentaire est créé avec succès.');
+
+        return $this->redirect($request->headers->get('referer'));
+
    }
 
+    
     return $this->render('post/index.html.twig', [
         'post' => $post,
         'form' => $form->createView()
