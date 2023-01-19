@@ -53,17 +53,17 @@ final class PostFactory extends ModelFactory
     protected function getDefaults(): array
     {
 
-        $datetime = self::faker()->dateTimeBetween('-3 years', 'now', 'Europe/Paris');
-        $dateTimeImmutable = DateTimeImmutable::createFromMutable($datetime);
+        // $datetime = self::faker()->dateTimeBetween('-3 years', 'now', 'Europe/Paris');
+        // $dateTimeImmutable = DateTimeImmutable::createFromMutable($datetime);
 
         return [
-            'author' => self::faker()->text(255),
-            'content' => self::faker()->text(),
+            'title' => self::faker()->sentence(),
+            'content' => self::faker()->text(1000),
             'image' => 'https://picsum.photos/seed/post-' . rand(0,500) . '/750/300',
-            'createdAt' => DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
-            'title' => self::faker()->text(255),
-            'category' => CategoryFactory::random()
-        ];
+            'createdAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTimeBetween('-3 years', 'now', 'Europe/Paris')),
+            'category' => CategoryFactory::random(),
+            'user' => UserFactory::findOrCreate(['email' => 'admin@gmail.com'])
+           ];
     }
 
     /**

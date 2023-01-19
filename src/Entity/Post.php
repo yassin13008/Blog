@@ -2,13 +2,19 @@
 
 namespace App\Entity;
 
-use App\Repository\PostRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use DateTimeZone;
+use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\PostRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints\Image;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
+#[UniqueEntity('title', message: 'Il existe déjà un article avec ce titre')]
 class Post
 {
     #[ORM\Id]
@@ -17,16 +23,18 @@ class Post
     private ?int $id = null;
 
     #[ORM\Column(length: 255, unique: true)]
+    #[Assert\NotBlank]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank]
     private ?string $content = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $author = null;
+    // #[ORM\Column(length: 255)] // Avt mod chap 11
+    // private ?string $author = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
@@ -42,10 +50,16 @@ class Post
     #[ORM\OrderBy(["createdAt" => "DESC"])]
     private Collection $comments;
 
+    #[ORM\ManyToOne(inversedBy: 'posts')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
+
     public function __construct()
     {
-        $this->comments = new ArrayCollection();
+       $this->createdAt = new \DateTimeImmutable('now', new DateTimeZone('Europe/Paris'));
+       $this->comments = new ArrayCollection();
     }
+    
 
     public function getId(): ?int
     {
@@ -88,17 +102,17 @@ class Post
         return $this;
     }
 
-    public function getAuthor(): ?string
-    {
-        return $this->author;
-    }
+    // public function getAuthor(): ?string // Avant modif chap 11
+    // {
+    //     return $this->author;
+    // }
 
-    public function setAuthor(string $author): self
-    {
-        $this->author = $author;
+    // public function setAuthor(string $author): self
+    // {
+    //     $this->author = $author;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function getCreatedAt(): ?\DateTimeImmutable
     {
@@ -162,6 +176,18 @@ class Post
                 $comment->setPost(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

@@ -11,26 +11,17 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 
 class AppFixtures extends Fixture
 {
-    public function load(ObjectManager $manager): void
+    public function load(ObjectManager $manager)
     {
-        UserFactory::new()->create([
-            'roles' => ['ROLE_ADMIN'],
-            'email' => 'admin@gmail.com'
-         ]);
-        
-        UserFactory::new()->createMany(10);
-        UserFactory::createMany(10);
-        UserFactory::createOne(['email' => 'user@gmail.com']);
-
-        CategoryFactory::new()->createMany(5);
-        PostFactory::new()->createMany(10);
-        CommentFactory::new()->createMany(50);
-
-
-
-        
-
-  // Enregistrement dans la base de données
-  $manager->flush();
+       UserFactory::new()->createMany(10);
+    
+       UserFactory::new()->create([
+           'roles' => ['ROLE_ADMIN'],
+           'email' => 'admin@gmail.com'
+       ]);
+       CategoryFactory::new()->createMany(5);
+       PostFactory::new()->createMany(10);
+       CommentFactory::new()->createMany(50);
+       $manager->flush();
     }
-}
+}    
